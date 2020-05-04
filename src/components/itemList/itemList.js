@@ -3,6 +3,8 @@ import './itemList.css';
 import styled from 'styled-components';
 import gotService from '../../services/gotService';
 import Spinner from '../spinner';
+import ErrorMessage from '../errorMessage';
+
 
 const ItemListBlock = styled.ul`
 	cursor: pointer;
@@ -15,7 +17,8 @@ const ListGroupItem = styled.li`
 export default class ItemList extends Component {
 	gotService = new gotService();
 	state = {
-		charList: null
+		charList: null,
+		error: false
 	}
 
 	componentDidMount() {
@@ -27,13 +30,19 @@ export default class ItemList extends Component {
 			})
 	}
 
+	componentDidCatch() {
+        this.setState({
+            error: true
+        })
+    }
+
 	renderItems(arr) {
 		return arr.map((item, i)=> {
 			return (
 				<ListGroupItem 
-				key = {i}
+				key = {item.id}
 				className="list-group-item"
-				onClick={() => this.props.onCharSelected(41 + i)}>
+				onClick={() => this.props.onCharSelected(item.id)}>
 				{item.name}
 				</ListGroupItem>
 			)
@@ -47,6 +56,9 @@ export default class ItemList extends Component {
 		if (!charList) {
 			return <Spinner/>
 		}
+		if(this.state.error) {
+            return <ErrorMessage/>
+        }
 
 		const items = this.renderItems(charList);
 
