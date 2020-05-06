@@ -2,11 +2,11 @@ import React, {Component} from 'react';
 import {Col, Row, Container} from 'reactstrap';
 import Header from '../header';
 import RandomChar from '../randomChar';
-import ItemList from '../itemList';
-import CharDetails from '../charDetails';
 import styled from 'styled-components';
 import ErrorMessage from '../errorMessage';
-import CharacterPage from '../characterPage';
+import {CharacterPage, BookPage, HousePage} from '../pages';
+import gotService from '../../services/gotService';
+
 
 const ToggleButton = styled.button `
     padding: 12px;
@@ -22,6 +22,8 @@ const ToggleButton = styled.button `
 
 
 export default class App extends Component {
+    gotService = new gotService();
+
     state = {
         showRandomChar: true,
         error: false,
@@ -64,7 +66,35 @@ export default class App extends Component {
                             Toggle random character</ToggleButton>
                         </Col>
                     </Row>
-                   <CharacterPage/> 
+                   <CharacterPage/>
+                   <BookPage/>
+                   <HousePage/>
+                    {/* <Row>
+                        <Col md='6'>
+                            <ItemList 
+                            onItemSelected={this.onItemSelected}
+                            getData = {this.gotService.getAllBooks}
+                            renderItem={(item) => item.name}
+                            />
+                        </Col>
+                        <Col md='6'>
+                            <ItemDetails 
+                            charId = {this.state.selectedChar}/>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md='6'>
+                            <ItemList 
+                            onItemSelected={this.onItemSelected}
+                            getData = {this.gotService.getAllHouses}
+                            renderItem={(item) => item.name}
+                            />
+                        </Col>
+                        <Col md='6'>
+                            <ItemDetails 
+                            itemId = {this.state.selectedChar}/>
+                        </Col>
+                    </Row> */}
                 </Container>
             </>
         );

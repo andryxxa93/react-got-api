@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import './itemList.css';
 import styled from 'styled-components';
-import gotService from '../../services/gotService';
 import Spinner from '../spinner';
 import ErrorMessage from '../errorMessage';
 
@@ -15,17 +14,19 @@ const ListGroupItem = styled.li`
 `;
 
 export default class ItemList extends Component {
-	gotService = new gotService();
 	state = {
-		charList: null,
+		itemList: null,
 		error: false
 	}
 
 	componentDidMount() {
-		this.gotService.getAllCharacters()
-			.then((charList) => {
+		const {getData} = this.props;
+
+
+		getData()
+			.then((itemList) => {
 				this.setState({
-					charList
+					itemList
 				})
 			})
 	}
@@ -37,30 +38,31 @@ export default class ItemList extends Component {
     }
 
 	renderItems(arr) {
-		return arr.map((item, i)=> {
+		return arr.map((item)=> {
+			const {id} = item;
+			const label = this.props.renderItem(item);
 			return (
 				<ListGroupItem 
-				key = {item.id}
+				key = {id}
 				className="list-group-item"
-				onClick={() => this.props.onCharSelected(item.id)}>
-				{item.name}
+				onClick={() => this.props.onItemSelected(id)}>
+				{label}
 				</ListGroupItem>
 			)
 		})
 	}
 
 	render() {
+		const {itemList} = this.state; 
 
-		const {charList} = this.state; 
-
-		if (!charList) {
+		if (!itemList) {
 			return <Spinner/>
 		}
 		if(this.state.error) {
             return <ErrorMessage/>
         }
 
-		const items = this.renderItems(charList);
+		const items = this.renderItems(itemList);
 
 		return (
 			<ItemListBlock>
